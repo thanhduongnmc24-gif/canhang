@@ -10,25 +10,21 @@
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
         .form-group input, .form-group select { 
-            width: 100%; /* Sửa thành 100% để vừa khít .form-group */
+            width: 100%; 
             padding: 8px; 
             border: 1px solid #ccc; 
             border-radius: 4px; 
             box-sizing: border-box;
         }
-        .form-group input[readonly] {
-            background-color: #eee;
-            cursor: not-allowed;
-        }
+        /* Đã xóa khối CSS cho input[readonly] */
         .form-row {
             display: flex;
             gap: 10px;
         }
         .form-row .form-group {
-            flex: 1; /* Mỗi .form-group chiếm 1 nửa */
-            min-width: 0; /* Sửa lỗi co dãn flexbox */
+            flex: 1; 
+            min-width: 0; 
         }
-        /* Style cho các nút bấm */
         .button-group {
             margin-top: 20px;
         }
@@ -41,7 +37,7 @@
             cursor: pointer; 
             font-size: 16px; 
             margin-right: 10px; 
-            margin-bottom: 10px; /* Thêm để xuống dòng đẹp hơn */
+            margin-bottom: 10px; 
         }
         button:hover { background-color: #0056b3; }
         #btn-pdf { background-color: #dc3545; }
@@ -88,13 +84,12 @@
 
         <div class="form-group">
             <label for="input-a5">Thông tin kíp (Ô A5):</label>
-            <input type="text" id="input-a5" value="" > <!-- Bỏ value="" để JS tự điền -->
+            <input type="text" id="input-a5" value="" > 
         </div>
         <hr>
         
         <h3>Thông tin hàng (Dòng 9)</h3>
 
-        <!-- HÀNG 1 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-b9">Nội dung:</label>
@@ -106,7 +101,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 2 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-d9">Chủng loại hàng:</label>
@@ -118,7 +112,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 3 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-f9">Người đại diện:</label>
@@ -130,7 +123,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 4 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-h9">BSX:</label>
@@ -142,34 +134,27 @@
             </div>
         </div>
 
-        <!-- HÀNG 5 -->
         <div class="form-row">
-            
             <div class="form-group">
                 <label for="input-j9">Số lô:</label>
                 <input type="text" id="input-j9" value="">
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label for="input-k9">Khối lượng:</label>
                 <input type="text" id="input-k9" value="50">
             </div>
         </div>
 
-        <!-- HÀNG 6 -->
         <div class="form-row">
-           
             <div class="form-group">
                 <label for="input-l9">Mục đích qua cân:</label>
                 <input type="text" id="input-l9" value="Xác định khối lượng">
             </div>
-             <div class="form-group">
-            <label for="input-m9">Ghi chú:</label>
-            <input type="text" id="input-m9" value="NM.CTDai(XCT1) =>NCNC1=>LT-HRC1">
+            <div class="form-group">
+                <label for="input-m9">Ghi chú:</label>
+                <input type="text" id="input-m9" value="NM.CTDai(XCT1) =>NCNC1=>PX.LT-HRC1">
+            </div>
         </div>
-        </div>
-
-        <!-- HÀNG 7 (Một mình) -->
-       
 
         <div class="button-group">
             <button id="btn-xlsx">Tải file XLSX</button>
@@ -183,4 +168,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
