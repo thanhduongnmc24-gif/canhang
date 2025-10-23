@@ -21,6 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
             g9: document.getElementById('input-g9').value,
             h9: document.getElementById('input-h9').value,
             i9: document.getElementById('input-i9').value,
+            j9: document.getElementById('input-j9').value,
+            k9: document.getElementById('input-k9').value,
+            l9: document.getElementById('input-l9').value,
+            m9: document.getElementById('input-m9').value,
         };
 
         try {
