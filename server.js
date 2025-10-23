@@ -3,33 +3,29 @@ const ExcelJS = require('exceljs');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { exec } = require('child_process'); // Thư viện để gọi lệnh hệ thống
+const { exec } = require('child_process'); 
 const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Sử dụng middleware
+// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Phục vụ file frontend
+app.use(express.static(path.join(__dirname, 'public'))); 
 
 const TEMPLATE_PATH = path.join(__dirname, 'template.xlsx');
 
 /**
- * Hàm trợ giúp: Điền dữ liệu vào file Excel
- * (ĐÃ CẬP NHẬT THEO ĐÚNG YÊU CẦU CỦA ĐẠI CA)
+ * Hàm điền dữ liệu vào Excel
  */
 async function fillExcel(data, outputPath) {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(TEMPLATE_PATH);
-    const worksheet = workbook.worksheets[0]; // Giả sử là sheet đầu tiên
+    const worksheet = workbook.worksheets[0]; 
 
     // Điền dữ liệu
     worksheet.getCell('A5').value = data.a5;
-    
-    // === SỬA LẠI THEO YÊU CẦU ===
-    // Ô A9 SẼ ĐƯỢC BỎ QUA (KHÔNG LÀM GÌ)
     
     // Gán dữ liệu từ ID của đại ca vào đúng cột Excel (Bắt đầu từ B9)
     worksheet.getCell('B9').value = data.b9; // [Nội dung] (id b9 -> ô B9)
@@ -37,7 +33,7 @@ async function fillExcel(data, outputPath) {
     worksheet.getCell('D9').value = data.d9; // [Chủng loại] (id d9 -> ô D9)
     worksheet.getCell('E9').value = data.e9; // [Khách hàng] (id e9 -> ô E9)
     worksheet.getCell('F9').value = data.f9; // [Người đại diện] (id f9 -> ô F9)
-    worksheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9)
+    worksVsheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9)
     worksheet.getCell('H9').value = data.h9; // [BSX] (id h9 -> ô H9)
     worksheet.getCell('I9').value = data.i9; // [ĐVVC] (id i9 -> ô I9)
     worksheet.getCell('J9').value = data.j9; // [Số lô] (id j9 -> ô J9)
@@ -55,16 +51,21 @@ async function fillExcel(data, outputPath) {
 
 /**
  * Hàm trợ giúp: Chuyển đổi Excel sang PDF bằng LibreOffice
+ * (ĐÃ CẬP NHẬT ĐỂ SỬA LỖI NGẮT TRANG)
  */
 function convertToPdf(excelPath, outputDir) {
-    const command = `libreoffice --headless --convert-to pdf ${excelPath} --outdir ${outputDir}`;
+    // Thêm bộ lọc JSON để ép "Fit to Width" (vừa chiều ngang)
+    // Cần có dấu nháy đơn bọc ngoài toàn bộ tham số convert-to
+    const command = `libreoffice --headless --convert-to 'pdf:calc_pdf_Export:{"SinglePageSheets":{"type":"boolean","value":"true"}}' ${excelPath} --outdir ${outputDir}`;
     
     return new Promise((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Lỗi khi convert PDF: ${stderr}`);
+                console.error(`Stdout: ${stdout}`);
                 return reject(new Error('Lỗi khi chuyển đổi PDF'));
             }
+            // Tên file PDF sẽ giống file Excel
             const pdfPath = excelPath.replace('.xlsx', '.pdf');
             resolve(pdfPath);
         });
@@ -97,8 +98,7 @@ app.post('/api/generate', async (req, res) => {
         } 
         else if (format === 'pdf') {
             // Bước 2: Nếu yêu cầu PDF, gọi LibreOffice
-            // (SỬA LỖI TYPO 'tempXfsxPath' -> 'tempXlsxPath')
-            const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir);
+            const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir); 
             fileToSendPath = tempPdfPath;
             filesToCleanup.push(tempPdfPath);
         } 
@@ -128,8 +128,11 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-// === SỬA LỖI SYNTAX MÀ ĐẠI CA GẶP TRƯỚC ĐÓ ===
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
+```eof
 
+Video này giải thích thêm về cách thay đổi hướng trang trong LibreOffice, điều mà chúng ta vừa làm bằng dòng lệnh.
+[Cách thay đổi khổ giấy dọc sang ngang trong LibreOffice](https://www.youtube.com/watch?v=abfSjPiIOgo)
+http://googleusercontent.com/youtube_content/32
