@@ -1,180 +1,130 @@
-document.addEventListener('DOMContentLoaded', () => {
+const express = require('express');
+const ExcelJS = require('exceljs');
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const { exec } = require('child_process'); // Thư viện để gọi lệnh hệ thống
+const cors = require('cors');
 
-    // --- BẮT ĐẦU CODE CẬP NHẬT Ô A5 ---
-    
-    // 1. Lấy các element
-    const selectKip = document.getElementById('select-kip');
-    const selectNhaCan = document.getElementById('select-nha-can');
-    const inputA5 = document.getElementById('input-a5');
+const app = express();
+const PORT = process.env.PORT || 10000;
 
-    // 2. Hàm để cập nhật ô A5
-    function updateA5() {
-        if (!selectKip || !selectNhaCan || !inputA5) {
-            console.error("Không tìm thấy element kíp, nhà cân hoặc input A5.");
-            return;
-        }
-        const kipValue = selectKip.value;
-        const nhaCanValue = selectNhaCan.value;
-        const today = new Date();
-        const day = today.getDate();
-        const month = today.getMonth() + 1; // Tháng bắt đầu từ 0
-        const year = today.getFullYear();
-        const dateString = `Kíp ${kipValue} Ngày ${day} tháng ${month} năm ${year}_NC số: ${nhaCanValue}`;
-        inputA5.value = dateString;
+// Sử dụng middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public'))); // Phục vụ file frontend
+
+const TEMPLATE_PATH = path.join(__dirname, 'template.xlsx');
+
+/**
+ * Hàm trợ giúp: Điền dữ liệu vào file Excel
+ */
+async function fillExcel(data, outputPath) {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(TEMPLATE_PATH);
+    const worksheet = workbook.worksheets[0]; // Giả sử là sheet đầu tiên
+
+    // Điền dữ liệu
+    worksheet.getCell('A5').value = data.a5;
+    worksheet.getCell('A9').value = data.a9;
+    worksheet.getCell('B9').value = data.b9;
+    worksheet.getCell('C9').value = data.c9;
+    worksheet.getCell('D9').value = data.d9;
+    worksheet.getCell('E9').value = data.e9;
+    worksheet.getCell('F9').value = data.f9;
+
+    worksheet.getCell('G9').value = data.g9;
+    worksheet.getCell('H9').value = data.h9; 
+    worksheet.getCell('I9').value = data.i9;
+    worksheet.getCell('J9').value = data.j9;
+    worksheet.getCell('K9').value = data.k9;
+    worksheet.getCell('L9').value = data.l9;
+    worksheet.getCell('M9').value = data.m9;
+    // Lưu file
+    await workbook.xlsx.writeFile(outputPath);
+    return outputPath;
+}
+
+/**
+ * Hàm trợ giúp: Chuyển đổi Excel sang PDF bằng LibreOffice
+ */
+function convertToPdf(excelPath, outputDir) {
+    // Đây chính là lệnh "Save as PDF"
+    const command = `libreoffice --headless --convert-to pdf ${excelPath} --outdir ${outputDir}`;
+
+    return new Promise((resolve, reject) => {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Lỗi khi convert PDF: ${stderr}`);
+                return reject(new Error('Lỗi khi chuyển đổi PDF'));
+            }
+            // Tên file PDF sẽ giống file Excel
+            const pdfPath = excelPath.replace('.xlsx', '.pdf');
+            resolve(pdfPath);
+        });
+    });
+}
+
+/**
+ * API Endpoint
+ * Nhận dữ liệu, tạo file (XLSX hoặc PDF) và gửi về
+ */
+app.post('/api/generate', async (req, res) => {
+    const { data, format } = req.body;
+
+    if (!data) {
+        return res.status(400).send('Không có dữ liệu');
     }
 
-    if (selectKip) selectKip.addEventListener('change', updateA5);
-    if (selectNhaCan) selectNhaCan.addEventListener('change', updateA5);
-    updateA5();
+    const tempDir = os.tmpdir();
+    const uniqueId = Date.now();
+    const tempXlsxPath = path.join(tempDir, `filled_${uniqueId}.xlsx`);
 
-    // --- KẾT THÚC CODE CẬP NHẬT Ô A5 ---
+    let fileToSendPath = '';
+    const filesToCleanup = [tempXlsxPath];
 
+    try {
+        // Bước 1: Luôn luôn tạo file XLSX trước
+        await fillExcel(data, tempXlsxPath);
 
-    // (Phần code cũ cho các nút bấm)
-    const btnXlsx = document.getElementById('btn-xlsx');
-    const btnPdf = document.getElementById('btn-pdf');
-    const statusEl = document.getElementById('status');
-    
-    // --- THÊM NÚT COPY ---
-    const btnCopy = document.getElementById('btn-copy');
-
-    if(btnXlsx) btnXlsx.addEventListener('click', () => generateFile('xlsx'));
-    if(btnPdf) btnPdf.addEventListener('click', () => generateFile('pdf'));
-    if(btnCopy) btnCopy.addEventListener('click', copyData); // Thêm sự kiện cho nút copy
-
-    async function generateFile(format) {
-        if (statusEl) {
-            statusEl.textContent = `Đang xử lý tạo file ${format.toUpperCase()}, vui lòng chờ...`;
-            statusEl.style.color = 'blue';
+        if (format === 'xlsx') {
+            fileToSendPath = tempXlsxPath;
+        } 
+        else if (format === 'pdf') {
+            // Bước 2: Nếu yêu cầu PDF, gọi LibreOffice
+            const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir);
+            fileToSendPath = tempPdfPath;
+            filesToCleanup.push(tempPdfPath); // Thêm file PDF vào danh sách dọn dẹp
+        } 
+        else {
+            return res.status(400).send('Định dạng không hợp lệ');
         }
 
-        // 1. Lấy dữ liệu (ĐÃ THÊM TRƯỞNG KÍP)
-        const data = {
-            a5: document.getElementById('input-a5').value,
-            a9: document.getElementById('input-a9').value,
-            b9: document.getElementById('input-b9').value,
-            c9: document.getElementById('input-c9').value,
-            d9: document.getElementById('input-d9').value,
-            e9: document.getElementById('input-e9').value,
-            f9: document.getElementById('input-f9').value,
-            g9: document.getElementById('input-g9').value,
-            h9: document.getElementById('input-h9').value,
-            i9: document.getElementById('input-i9').value,
-            j9: document.getElementById('input-j9').value,
-            k9: document.getElementById('input-k9').value,
-            l9: document.getElementById('input-l9').value,
-            m9: document.getElementById('input-m9').value,
-            truongKip: document.getElementById('input-truongkip').value, // Thêm trưởng kíp
-        };
-
-        try {
-            // 2. Gọi API đến backend
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ data, format }),
+        // Bước 3: Gửi file về cho người dùng tải
+        res.sendFile(fileToSendPath, (err) => {
+            if (err) {
+                console.error('Lỗi khi gửi file:', err);
+            }
+            // Bước 4: Dọn dẹp file tạm
+            filesToCleanup.forEach(filePath => {
+                fs.unlink(filePath, (unlinkErr) => {
+                    if (unlinkErr) console.error('Lỗi khi xóa file tạm:', unlinkErr);
+                });
             });
+        });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Lỗi máy chủ: ${errorText}`);
-            }
-
-            // 3. Nhận file về dưới dạng 'blob'
-            const blob = await response.blob();
-
-            // 4. Tạo link tải về
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = `NhuCauCanHang_${Date.now()}.${format}`; // Tên file tải về
-            document.body.appendChild(a);
-            
-            a.click(); // Tự động nhấn link để tải
-
-            // 5. Dọn dẹp
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-
-            if (statusEl) {
-                statusEl.textContent = 'Hoàn thành! Đã tải file.';
-                statusEl.style.color = 'green';
-            }
-
-        } catch (error) {
-            console.error('Lỗi khi tạo file:', error);
-            if (statusEl) {
-                statusEl.textContent = `Lỗi: ${error.message}`;
-                statusEl.style.color = 'red';
-            }
-        }
-    }
-    
-    // --- HÀM MỚI ĐỂ COPY DỮ LIỆU ---
-    function copyData() {
-        try {
-            // 1. Lấy tất cả giá trị
-            const nhaCanSelect = document.getElementById('select-nha-can');
-            const nhaCanText = nhaCanSelect.options[nhaCanSelect.selectedIndex].text; // Lấy "Nhà cân 1"
-            
-            const truongKip = document.getElementById('input-truongkip').value;
-            const cccd = document.getElementById('input-g9').value;
-            const khachHang = document.getElementById('input-e9').value;
-            const noiDung = document.getElementById('input-a9').value;
-            const chungLoai = document.getElementById('input-c9').value;
-            const daiDien = document.getElementById('input-f9').value;
-            const bsx = document.getElementById('input-h9').value;
-            const donViVanChuyen = document.getElementById('input-i9').value;
-            const ghiChu = document.getElementById('input-m9').value;
-
-            // 2. Tạo nội dung (Lưu ý: template string dùng dấu ` chứ không phải ')
-            const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} - ${cccd} - ${khachHang} đăng kí thông tin cân hàng như sau:
-Nội dung cân: ${noiDung}
-Hàng hoá : ${chungLoai}
-Khách hàng: ${khachHang}
-Đại diện: ${daiDien}
-Biển số xe: ${bsx};
-Đơn vị vận chuyển :${donViVanChuyen}
-Ghi chú: ${ghiChu}
-Trân trọng!`;
-
-            // 3. Copy vào clipboard (dùng execCommand để tương thích)
-            const textArea = document.createElement("textarea");
-            textArea.value = textToCopy;
-            textArea.style.position = "fixed";  // Ẩn đi
-            textArea.style.left = "-9999px";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            let success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (err) {
-                console.error('Không thể copy bằng execCommand:', err);
-            }
-            document.body.removeChild(textArea);
-
-            // 4. Báo trạng thái
-            if (statusEl) {
-                if (success) {
-                    statusEl.textContent = 'Đã copy nội dung vào clipboard!';
-                    statusEl.style.color = 'green';
-                } else {
-                    throw new Error('Không thể tự động copy.');
-                }
-            }
-
-        } catch (error) {
-            console.error('Lỗi khi copy:', error);
-            if (statusEl) {
-                statusEl.textContent = `Lỗi: ${error.message}`;
-                statusEl.style.color = 'red';
-            }
-        }
+    } catch (error) {
+        console.error('Lỗi server:', error);
+        res.status(500).send('Lỗi máy chủ khi tạo file');
+        // Dọn dẹp nếu có lỗi
+        filesToCleanup.forEach(filePath => {
+            fs.unlink(filePath, (unlinkErr) => {});
+        });
     }
 });
 
+app.listen(PORT, () => {
+    console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
+});
+
+});
