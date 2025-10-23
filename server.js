@@ -18,6 +18,7 @@ const TEMPLATE_PATH = path.join(__dirname, 'template.xlsx');
 
 /**
  * Hàm điền dữ liệu vào Excel
+ * (ĐÃ SỬA LỖI TYPO 'worksVsheet')
  */
 async function fillExcel(data, outputPath) {
     const workbook = new ExcelJS.Workbook();
@@ -33,7 +34,7 @@ async function fillExcel(data, outputPath) {
     worksheet.getCell('D9').value = data.d9; // [Chủng loại] (id d9 -> ô D9)
     worksheet.getCell('E9').value = data.e9; // [Khách hàng] (id e9 -> ô E9)
     worksheet.getCell('F9').value = data.f9; // [Người đại diện] (id f9 -> ô F9)
-    worksVsheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9)
+    worksheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9)
     worksheet.getCell('H9').value = data.h9; // [BSX] (id h9 -> ô H9)
     worksheet.getCell('I9').value = data.i9; // [ĐVVC] (id i9 -> ô I9)
     worksheet.getCell('J9').value = data.j9; // [Số lô] (id j9 -> ô J9)
@@ -51,10 +52,9 @@ async function fillExcel(data, outputPath) {
 
 /**
  * Hàm trợ giúp: Chuyển đổi Excel sang PDF bằng LibreOffice
- * (ĐÃ CẬP NHẬT ĐỂ SỬA LỖI NGẮT TRANG)
+ * (Đã sửa lỗi ngắt trang)
  */
 function convertToPdf(excelPath, outputDir) {
-    // Thêm bộ lọc JSON để ép "Fit to Width" (vừa chiều ngang)
     // Cần có dấu nháy đơn bọc ngoài toàn bộ tham số convert-to
     const command = `libreoffice --headless --convert-to 'pdf:calc_pdf_Export:{"SinglePageSheets":{"type":"boolean","value":"true"}}' ${excelPath} --outdir ${outputDir}`;
     
@@ -98,6 +98,7 @@ app.post('/api/generate', async (req, res) => {
         } 
         else if (format === 'pdf') {
             // Bước 2: Nếu yêu cầu PDF, gọi LibreOffice
+            // (ĐÃ SỬA LỖI TYPO 'tempXfsxPath' -> 'tempXlsxPath')
             const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir); 
             fileToSendPath = tempPdfPath;
             filesToCleanup.push(tempPdfPath);
@@ -132,8 +133,3 @@ app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
 ```eof
-
-Video này giải thích thêm về cách thay đổi hướng trang trong LibreOffice, điều mà chúng ta vừa làm bằng dòng lệnh.
-[Cách thay đổi khổ giấy dọc sang ngang trong LibreOffice](https://www.youtube.com/watch?v=abfSjPiIOgo)
-http://googleusercontent.com/youtube_content/32
-
