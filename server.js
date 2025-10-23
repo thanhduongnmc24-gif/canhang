@@ -26,13 +26,18 @@ async function fillExcel(data, outputPath) {
 
     // Điền dữ liệu
     worksheet.getCell('A5').value = data.a5;
-    worksheet.getCell('A9').value = data.a9;
     worksheet.getCell('B9').value = data.b9;
     worksheet.getCell('C9').value = data.c9;
     worksheet.getCell('D9').value = data.d9;
     worksheet.getCell('E9').value = data.e9;
     worksheet.getCell('F9').value = data.f9;
-
+    worksheet.getCell('G9').value = data.g9;
+    worksheet.getCell('H9').value = data.h9; 
+    worksheet.getCell('I9').value = data.i9;
+    worksheet.getCell('J9').value = data.j9;
+    worksheet.getCell('K9').value = data.k9;
+    worksheet.getCell('L9').value = data.l9;
+    worksheet.getCell('M9').value = data.m9;
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
     return outputPath;
@@ -118,4 +123,5 @@ app.post('/api/generate', async (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
+
 });
