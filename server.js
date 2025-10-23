@@ -34,16 +34,16 @@ async function fillExcel(data, outputPath) {
     worksheet.getCell('D9').value = data.d9; // [Chủng loại] (id d9 -> ô D9)
     worksheet.getCell('E9').value = data.e9; // [Khách hàng] (id e9 -> ô E9)
     worksheet.getCell('F9').value = data.f9; // [Người đại diện] (id f9 -> ô F9)
-    worksheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9)
+    worksheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9) - SỬA LỖI TYPO
     worksheet.getCell('H9').value = data.h9; // [BSX] (id h9 -> ô H9)
     worksheet.getCell('I9').value = data.i9; // [ĐVVC] (id i9 -> ô I9)
-    worksheet.getCell('J9').value = data.j9; // [Số lô] (id j9 -> ô J9)
+    worksheet.getCell('J9').value = data.j9; // [Số lô] (id j9 -> ô J9) - SỬA LỖI TYPO
     worksheet.getCell('K9').value = data.k9; // [Khối lượng] (id k9 -> ô K9)
     worksheet.getCell('L9').value = data.l9; // [Mục đích] (id l9 -> ô L9)
     worksheet.getCell('M9').value = data.m9; // [Ghi chú] (id m9 -> ô M9)
 
     // Gán trưởng kíp vào ô Người lập (K12)
-    worksheet.getCell('I15').value = data.truongKip;
+    worksheet.getCell('K12').value = data.truongKip;
 
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
@@ -132,4 +132,4 @@ app.post('/api/generate', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
-```eof
+
