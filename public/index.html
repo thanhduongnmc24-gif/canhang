@@ -14,9 +14,8 @@
             padding: 8px; 
             border: 1px solid #ccc; 
             border-radius: 4px; 
-            box-sizing: border-box; /* Thêm để padding không làm vỡ layout */
+            box-sizing: border-box;
         }
-        /* Style riêng cho ô A5 bị khóa */
         .form-group input[readonly] {
             background-color: #eee;
             cursor: not-allowed;
@@ -32,6 +31,8 @@
         button:hover { background-color: #0056b3; }
         #btn-pdf { background-color: #dc3545; }
         #btn-pdf:hover { background-color: #a71d2a; }
+        #btn-copy { background-color: #28a745; } /* Màu xanh lá cho nút copy */
+        #btn-copy:hover { background-color: #218838; }
         #status { margin-top: 20px; font-size: 16px; color: #333; }
     </style>
 </head>
@@ -40,7 +41,6 @@
     <div class="container">
         <h2>Phiếu Nhập Liệu Nhu Cầu Cân Hàng</h2>
 
-        <!-- CÁC Ô CHỌN MỚI -->
         <div class="form-row">
             <div class="form-group">
                 <label for="select-kip">Chọn kíp:</label>
@@ -55,21 +55,22 @@
                 <select id="select-nha-can">
                     <option value="NC1">Nhà cân 1</option>
                     <option value="NC2">Nhà cân 2</option>
+                    <option value="NC3">Nhà cân 3</option>
                 </select>
             </div>
         </div>
 
-        <!-- Ô A5 ĐÃ SỬA LẠI (readonly) -->
+        <div class="form-group">
+            <label for="input-truongkip">Trưởng kíp:</label>
+            <input type="text" id="input-truongkip" value="Nguyễn Văn Thoát">
+        </div>
+
         <div class="form-group">
              <label for="input-a5">Thông tin kíp (Ô A5):</label>
             <input type="text" id="input-a5" value="" readonly>
         </div>
         <hr>
-        <div class="form-group">
-                <label for="input-truongkip">Trưởng kíp:</label>
-                <input type="text" id="input-truongkip" value="Nguyễn Văn Thoát">
-            </div>
-        <!-- ĐÃ SỬA LẠI ID CHO ĐÚNG THỨ TỰ CỘT EXCEL -->
+        
         <h3>Thông tin hàng (Dòng 9)</h3>
         <div class="form-group">
             <label for="input-a9">Nội dung (Ô A9):</label>
@@ -89,7 +90,7 @@
         </div>
         <div class="form-group">
             <label for="input-e9">Khách hàng (Ô E9):</label>
-            <input type="text" id="input-e9" value="">
+            <input type="text" id="input-e9" value="HPDQ">
         </div>
         <div class="form-group">
             <label for="input-f9">Người đại diện (Ô F9):</label>
@@ -126,7 +127,8 @@
 
         <button id="btn-xlsx">Tải file XLSX</button>
         <button id="btn-pdf">Tải file PDF</button>
-        <button id="btn-copy" style="background-color: #28a745;">Copy Nội Dung</button>
+        <button id="btn-copy">Copy Nội Dung</button>
+
         <div id="status"></div>
     </div>
 
