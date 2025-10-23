@@ -40,6 +40,7 @@ async function fillExcel(data, outputPath) {
     worksheet.getCell('K9').value = data.k9;
     worksheet.getCell('L9').value = data.l9;
     worksheet.getCell('M9').value = data.m9;
+    worksheet.getCell('K12').value = data.truongKip;
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
     return outputPath;
@@ -128,3 +129,4 @@ app.listen(PORT, () => {
 });
 
 });
+
