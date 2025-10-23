@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ghiChu = document.getElementById('input-m9').value;
 
             // 2. Tạo nội dung
-            const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} - ${cccd} - ${khachHang} đăng kí thông tin cân hàng như sau:
+            const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} - ${khachHang} đăng kí thông tin cân hàng như sau:
 Nội dung cân: ${noiDung}
 Hàng hoá : ${chungLoai}
 Khách hàng: ${khachHang}
