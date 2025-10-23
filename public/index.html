@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhập Liệu Cân Hàng</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        button:hover { background-color: #0056b3; }
+        #btn-pdf { background-color: #dc3545; }
+        #btn-pdf:hover { background-color: #a71d2a; }
+        #status { margin-top: 20px; font-size: 16px; color: #333; }
+    </style>
+</head>
+<body>
 
+    <div class="container">
+        <h2>Phiếu Nhập Liệu Nhu Cầu Cân Hàng</h2>
+        
+        <div class="form-group">
+            <label for="input-a5">Kíp (Ô A5):</label>
+            <input type="text" id="input-a5" value="Kíp 2A Ngày 10-11 tháng 03 năm 2025_NC số: NC1">
+        </div>
+        <hr>
+        <h3>Thông tin hàng (Dòng 9)</h3>
+        <div class="form-group">
+            <label for="input-a9">Nội dung (Ô A9):</label>
+            <input type="text" id="input-a9" value="Nhập hàng nội bộ (BP NM này xuất sang BP NM khác thuộc HPDQ)">
+        </div>
+        <div class="form-group">
+            <label for="input-b9">Chứng từ (Ô B9):</label>
+            <input type="text" id="input-b9" value="">
+        </div>
+        <div class="form-group">
+            <label for="input-c9">Chủng loại hàng (Ô C9):</label>
+            <input type="text" id="input-c9" value="Phế đẩu mẩu">
+        </div>
+        <div class="form-group">
+            <label for="input-d9">Loại hàng (Ô D9):</label>
+            <input type="text" id="input-d9" value="HPDQ">
+        </div>
+        <div class="form-group">
+            <label for="input-e9">Khách hàng (Ô E9):</label>
+            <input type="text" id="input-e9" value="">
+        </div>
+        <div class="form-group">
+            <label for="input-f9">Người đại diện (Ô F9):</label>
+            <input type="text" id="input-f9" value="Phạm Tấn Vỹ">
+        </div>
+
+        <button id="btn-xlsx">Tải file XLSX</button>
+        <button id="btn-pdf">Tải file PDF</button>
+
+        <div id="status"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
