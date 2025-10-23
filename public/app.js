@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Lấy dữ liệu
         const data = {
             a5: document.getElementById('input-a5').value,
-            a9: document.getElementById('input-a9').value,
             b9: document.getElementById('input-b9').value,
             c9: document.getElementById('input-c9').value,
             d9: document.getElementById('input-d9').value,
             e9: document.getElementById('input-e9').value,
             f9: document.getElementById('input-f9').value,
+            g9: document.getElementById('input-h9').value,
+            h9: document.getElementById('input-h9').value,
+            i9: document.getElementById('input-i9').value,
         };
 
         try {
