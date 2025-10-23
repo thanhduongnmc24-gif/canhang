@@ -43,7 +43,7 @@ async function fillExcel(data, outputPath) {
     worksheet.getCell('M9').value = data.m9; // [Ghi chú] (id m9 -> ô M9)
 
     // Gán trưởng kíp vào ô Người lập (K12)
-    worksheet.getCell('K12').value = data.truongKip;
+    worksheet.getCell('I15').value = data.truongKip;
 
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
@@ -132,4 +132,5 @@ app.post('/api/generate', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
+
 
