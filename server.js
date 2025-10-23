@@ -45,7 +45,7 @@ async function fillExcel(data, outputPath) {
 
     // Gán trưởng kíp vào ô Người lập (K12)
     // (Đại ca có thể đổi 'K12' thành ô khác nếu muốn)
-    worksheet.getCell('K12').value = data.truongKip;
+    worksheet.getCell('I15').value = data.truongKip;
 
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
@@ -131,3 +131,4 @@ app.post('/api/generate', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
+
