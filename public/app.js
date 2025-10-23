@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Không tìm thấy element kíp, nhà cân hoặc input A5.");
             return;
         }
-        // (Thêm code khóa ô A5)
-       
+        
+        // !!! ĐÃ XÓA DÒNG "inputA5.readOnly = true;" TẠI ĐÂY !!!
+        // Giờ đại ca có thể tự do chỉnh sửa ô A5
 
         const kipValue = selectKip.value;
         const nhaCanValue = selectNhaCan.value;
@@ -23,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = today.getMonth() + 1; // Tháng bắt đầu từ 0
         const year = today.getFullYear();
         const dateString = `Kíp ${kipValue} Ngày ${day} tháng ${month} năm ${year}_NC số: ${nhaCanValue}`;
+        
+        // Vẫn tự động điền giá trị
         inputA5.value = dateString;
     }
 
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Lấy dữ liệu (ĐÃ SỬA THEO ID CỦA ĐẠI CA)
         const data = {
-            a5: document.getElementById('input-a5').value,
+            a5: document.getElementById('input-a5').value, // Sẽ lấy giá trị A5 dù đã bị sửa
             b9: document.getElementById('input-b9').value, // Nội dung
             c9: document.getElementById('input-c9').value, // Chứng từ
             d9: document.getElementById('input-d9').value, // Chủng loại
@@ -64,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             k9: document.getElementById('input-k9').value, // Khối lượng
             l9: document.getElementById('input-l9').value, // Mục đích
             m9: document.getElementById('input-m9').value, // Ghi chú
-            truongKip: document.getElementById('input-truongkip').value, // Thêm trưởng kíp
+            truongKip: document.getElementById('input-truongkip').value, 
         };
 
         try {
@@ -90,10 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = `NhuCauCanHang_${Date.now()}.${format}`; // Tên file tải về
+            a.download = `NhuCauCanHang_${Date.now()}.${format}`; 
             document.body.appendChild(a);
             
-            a.click(); // Tự động nhấn link để tải
+            a.click(); 
 
             // 5. Dọn dẹp
             window.URL.revokeObjectURL(url);
@@ -131,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ghiChu = document.getElementById('input-m9').value;
 
             // 2. Tạo nội dung
-            const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip}  - ${khachHang} đăng kí thông tin cân hàng như sau:
+            const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} - ${cccd} - ${khachHang} đăng kí thông tin cân hàng như sau:
 Nội dung cân: ${noiDung}
 Hàng hoá : ${chungLoai}
 Khách hàng: ${khachHang}
