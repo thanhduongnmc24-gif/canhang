@@ -18,6 +18,7 @@ const TEMPLATE_PATH = path.join(__dirname, 'template.xlsx');
 
 /**
  * Hàm trợ giúp: Điền dữ liệu vào file Excel
+ * (ĐÃ CẬP NHẬT)
  */
 async function fillExcel(data, outputPath) {
     const workbook = new ExcelJS.Workbook();
@@ -26,21 +27,26 @@ async function fillExcel(data, outputPath) {
 
     // Điền dữ liệu
     worksheet.getCell('A5').value = data.a5;
+    
+    // Dòng 9
     worksheet.getCell('A9').value = data.a9;
     worksheet.getCell('B9').value = data.b9;
     worksheet.getCell('C9').value = data.c9;
     worksheet.getCell('D9').value = data.d9;
     worksheet.getCell('E9').value = data.e9;
     worksheet.getCell('F9').value = data.f9;
-
     worksheet.getCell('G9').value = data.g9;
-    worksheet.getCell('H9').value = data.h9; 
+    worksheet.getCell('H9').value = data.h9;
     worksheet.getCell('I9').value = data.i9;
     worksheet.getCell('J9').value = data.j9;
     worksheet.getCell('K9').value = data.k9;
     worksheet.getCell('L9').value = data.l9;
     worksheet.getCell('M9').value = data.m9;
+
+    // Gán trưởng kíp vào ô Người lập (K12)
+    // (Đại ca có thể đổi 'K12' thành ô khác nếu muốn)
     worksheet.getCell('K12').value = data.truongKip;
+
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
     return outputPath;
@@ -48,18 +54,17 @@ async function fillExcel(data, outputPath) {
 
 /**
  * Hàm trợ giúp: Chuyển đổi Excel sang PDF bằng LibreOffice
+ * (Không thay đổi)
  */
 function convertToPdf(excelPath, outputDir) {
-    // Đây chính là lệnh "Save as PDF"
     const command = `libreoffice --headless --convert-to pdf ${excelPath} --outdir ${outputDir}`;
-
+    
     return new Promise((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Lỗi khi convert PDF: ${stderr}`);
                 return reject(new Error('Lỗi khi chuyển đổi PDF'));
             }
-            // Tên file PDF sẽ giống file Excel
             const pdfPath = excelPath.replace('.xlsx', '.pdf');
             resolve(pdfPath);
         });
@@ -68,7 +73,7 @@ function convertToPdf(excelPath, outputDir) {
 
 /**
  * API Endpoint
- * Nhận dữ liệu, tạo file (XLSX hoặc PDF) và gửi về
+ * (Không thay đổi)
  */
 app.post('/api/generate', async (req, res) => {
     const { data, format } = req.body;
@@ -80,7 +85,7 @@ app.post('/api/generate', async (req, res) => {
     const tempDir = os.tmpdir();
     const uniqueId = Date.now();
     const tempXlsxPath = path.join(tempDir, `filled_${uniqueId}.xlsx`);
-
+    
     let fileToSendPath = '';
     const filesToCleanup = [tempXlsxPath];
 
@@ -95,7 +100,7 @@ app.post('/api/generate', async (req, res) => {
             // Bước 2: Nếu yêu cầu PDF, gọi LibreOffice
             const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir);
             fileToSendPath = tempPdfPath;
-            filesToCleanup.push(tempPdfPath); // Thêm file PDF vào danh sách dọn dẹp
+            filesToCleanup.push(tempPdfPath);
         } 
         else {
             return res.status(400).send('Định dạng không hợp lệ');
@@ -117,7 +122,6 @@ app.post('/api/generate', async (req, res) => {
     } catch (error) {
         console.error('Lỗi server:', error);
         res.status(500).send('Lỗi máy chủ khi tạo file');
-        // Dọn dẹp nếu có lỗi
         filesToCleanup.forEach(filePath => {
             fs.unlink(filePath, (unlinkErr) => {});
         });
@@ -127,6 +131,3 @@ app.post('/api/generate', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
-
-});
-
