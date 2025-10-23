@@ -25,18 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (selectKip) selectKip.addEventListener('change', updateA5);
     if (selectNhaCan) selectNhaCan.addEventListener('change', updateA5);
-    updateA5();
+    updateA5(); // Chạy 1 lần khi tải trang
 
     // --- KẾT THÚC CODE CẬP NHẬT Ô A5 ---
 
 
-    // (Phần code cũ cho các nút bấm)
+    // --- CODE CHO CÁC NÚT BẤM ---
     const btnXlsx = document.getElementById('btn-xlsx');
     const btnPdf = document.getElementById('btn-pdf');
     const statusEl = document.getElementById('status');
-    
-    // --- THÊM NÚT COPY ---
-    const btnCopy = document.getElementById('btn-copy');
+    const btnCopy = document.getElementById('btn-copy'); // Nút copy mới
 
     if(btnXlsx) btnXlsx.addEventListener('click', () => generateFile('xlsx'));
     if(btnPdf) btnPdf.addEventListener('click', () => generateFile('pdf'));
@@ -130,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const donViVanChuyen = document.getElementById('input-i9').value;
             const ghiChu = document.getElementById('input-m9').value;
 
-            // 2. Tạo nội dung (Lưu ý: template string dùng dấu ` chứ không phải ')
+            // 2. Tạo nội dung
             const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} - ${cccd} - ${khachHang} đăng kí thông tin cân hàng như sau:
 Nội dung cân: ${noiDung}
 Hàng hoá : ${chungLoai}
@@ -141,10 +139,10 @@ Biển số xe: ${bsx};
 Ghi chú: ${ghiChu}
 Trân trọng!`;
 
-            // 3. Copy vào clipboard (dùng execCommand để tương thích)
+            // 3. Copy vào clipboard
             const textArea = document.createElement("textarea");
             textArea.value = textToCopy;
-            textArea.style.position = "fixed";  // Ẩn đi
+            textArea.style.position = "fixed";
             textArea.style.left = "-9999px";
             document.body.appendChild(textArea);
             textArea.focus();
@@ -154,7 +152,7 @@ Trân trọng!`;
             try {
                 success = document.execCommand('copy');
             } catch (err) {
-                console.error('Không thể copy bằng execCommand:', err);
+                console.error('Không thể copy:', err);
             }
             document.body.removeChild(textArea);
 
@@ -177,4 +175,3 @@ Trân trọng!`;
         }
     }
 });
-
