@@ -3,43 +3,44 @@ const ExcelJS = require('exceljs');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { exec } = require('child_process'); 
+const { exec } = require('child_process'); // Thư viện để gọi lệnh hệ thống
 const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Middleware
+// Sử dụng middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static(path.join(__dirname, 'public'))); // Phục vụ file frontend
 
 const TEMPLATE_PATH = path.join(__dirname, 'template.xlsx');
 
 /**
- * Hàm điền dữ liệu vào Excel
- * (ĐÃ CẬP NHẬT THEO ID CỦA ĐẠI CA)
+ * Hàm trợ giúp: Điền dữ liệu vào file Excel
+ * (ĐÃ CẬP NHẬT THEO ĐÚNG YÊU CẦU CỦA ĐẠI CA)
  */
 async function fillExcel(data, outputPath) {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(TEMPLATE_PATH);
-    const worksheet = workbook.worksheets[0]; 
+    const worksheet = workbook.worksheets[0]; // Giả sử là sheet đầu tiên
 
     // Điền dữ liệu
     worksheet.getCell('A5').value = data.a5;
     
-    // Dòng 9
-    // Gán dữ liệu từ ID của đại ca vào đúng cột Excel
-    worksheet.getCell('A9').value = data.b9; // [Nội dung] (id b9 -> ô A9)
-    worksheet.getCell('B9').value = data.c9; // [Chứng từ] (id c9 -> ô B9)
-    worksheet.getCell('C9').value = data.d9; // [Chủng loại] (id d9 -> ô C9)
-    worksheet.getCell('D9').value = data.e9; // [Loại hàng] (id e9 -> ô D9)
-    worksVsheet.getCell('E9').value = data.e9; // [Khách hàng] (id e9 -> ô E9)
+    // === SỬA LẠI THEO YÊU CẦU ===
+    // Ô A9 SẼ ĐƯỢC BỎ QUA (KHÔNG LÀM GÌ)
+    
+    // Gán dữ liệu từ ID của đại ca vào đúng cột Excel (Bắt đầu từ B9)
+    worksheet.getCell('B9').value = data.b9; // [Nội dung] (id b9 -> ô B9)
+    worksheet.getCell('C9').value = data.c9; // [Chứng từ] (id c9 -> ô C9)
+    worksheet.getCell('D9').value = data.d9; // [Chủng loại] (id d9 -> ô D9)
+    worksheet.getCell('E9').value = data.e9; // [Khách hàng] (id e9 -> ô E9)
     worksheet.getCell('F9').value = data.f9; // [Người đại diện] (id f9 -> ô F9)
     worksheet.getCell('G9').value = data.g9; // [CCCD] (id g9 -> ô G9)
     worksheet.getCell('H9').value = data.h9; // [BSX] (id h9 -> ô H9)
     worksheet.getCell('I9').value = data.i9; // [ĐVVC] (id i9 -> ô I9)
-    worksVsheet.getCell('J9').value = data.j9; // [Số lô] (id j9 -> ô J9)
+    worksheet.getCell('J9').value = data.j9; // [Số lô] (id j9 -> ô J9)
     worksheet.getCell('K9').value = data.k9; // [Khối lượng] (id k9 -> ô K9)
     worksheet.getCell('L9').value = data.l9; // [Mục đích] (id l9 -> ô L9)
     worksheet.getCell('M9').value = data.m9; // [Ghi chú] (id m9 -> ô M9)
@@ -53,7 +54,7 @@ async function fillExcel(data, outputPath) {
 }
 
 /**
- * Hàm chuyển đổi Excel sang PDF bằng LibreOffice
+ * Hàm trợ giúp: Chuyển đổi Excel sang PDF bằng LibreOffice
  */
 function convertToPdf(excelPath, outputDir) {
     const command = `libreoffice --headless --convert-to pdf ${excelPath} --outdir ${outputDir}`;
@@ -96,8 +97,8 @@ app.post('/api/generate', async (req, res) => {
         } 
         else if (format === 'pdf') {
             // Bước 2: Nếu yêu cầu PDF, gọi LibreOffice
-            // (ĐÃ SỬA LỖI TYPO 'tempXfsxPath' -> 'tempXlsxPath')
-            const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir); 
+            // (SỬA LỖI TYPO 'tempXfsxPath' -> 'tempXlsxPath')
+            const tempPdfPath = await convertToPdf(tempXlsxPath, tempDir);
             fileToSendPath = tempPdfPath;
             filesToCleanup.push(tempPdfPath);
         } 
@@ -127,7 +128,8 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-// (ĐÃ SỬA LỖI SYNTAXERROR)
+// === SỬA LỖI SYNTAX MÀ ĐẠI CA GẶP TRƯỚC ĐÓ ===
 app.listen(PORT, () => {
     console.log(`Máy chủ đang chạy tại cổng ${PORT}`);
 });
+
