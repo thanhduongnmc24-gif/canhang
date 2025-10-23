@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             d9: document.getElementById('input-d9').value,
             e9: document.getElementById('input-e9').value,
             f9: document.getElementById('input-f9').value,
-            g9: document.getElementById('input-h9').value,
+            g9: document.getElementById('input-g9').value,
             h9: document.getElementById('input-h9').value,
             i9: document.getElementById('input-i9').value,
         };
