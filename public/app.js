@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         // (Thêm code khóa ô A5)
-        inputA5.readOnly = true;
+       
 
         const kipValue = selectKip.value;
         const nhaCanValue = selectNhaCan.value;
