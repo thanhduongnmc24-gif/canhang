@@ -9,7 +9,25 @@
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input { width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .form-group input, .form-group select { 
+            width: 95%; 
+            padding: 8px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; /* Thêm để padding không làm vỡ layout */
+        }
+        /* Style riêng cho ô A5 bị khóa */
+        .form-group input[readonly] {
+            background-color: #eee;
+            cursor: not-allowed;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
         button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px; }
         button:hover { background-color: #0056b3; }
         #btn-pdf { background-color: #dc3545; }
@@ -21,61 +39,88 @@
 
     <div class="container">
         <h2>Phiếu Nhập Liệu Nhu Cầu Cân Hàng</h2>
+
+        <!-- CÁC Ô CHỌN MỚI -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="select-kip">Chọn kíp:</label>
+                <select id="select-kip">
+                    <option value="1A">Kíp 1A</option>
+                    <option value="2A">Kíp 2A</option>
+                    <option value="3A">Kíp 3A</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="select-nha-can">Chọn nhà cân:</label>
+                <select id="select-nha-can">
+                    <option value="NC1">Nhà cân 1</option>
+                    <option value="NC2">Nhà cân 2</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Ô A5 ĐÃ SỬA LẠI (readonly) -->
         <div class="form-group">
-             <label for="input-a5">Thông tin kíp:</label>
-            <input type="text" id="input-a5" value="">
+             <label for="input-a5">Thông tin kíp (Ô A5):</label>
+            <input type="text" id="input-a5" value="" readonly>
         </div>
         <hr>
-        <h3>Thông tin hàng</h3>
+        
+        <!-- ĐÃ SỬA LẠI ID CHO ĐÚNG THỨ TỰ CỘT EXCEL -->
+        <h3>Thông tin hàng (Dòng 9)</h3>
         <div class="form-group">
-            <label for="input-b9">Nội dung:</label>
-            <input type="text" id="input-b9" value="Nhập hàng nội bộ (BP NM này xuất sang BP NM khác thuộc HPDQ)">
+            <label for="input-a9">Nội dung (Ô A9):</label>
+            <input type="text" id="input-a9" value="Nhập hàng nội bộ (BP NM này xuất sang BP NM khác thuộc HPDQ)">
         </div>
         <div class="form-group">
-            <label for="input-c9">Chứng từ:</label>
-            <input type="text" id="input-c9" value="">
+            <label for="input-b9">Chứng từ (Ô B9):</label>
+            <input type="text" id="input-b9" value="">
         </div>
         <div class="form-group">
-            <label for="input-d9">Chủng loại hàng:</label>
-            <input type="text" id="input-d9" value="Phế đẩu mẩu">
+            <label for="input-c9">Chủng loại hàng (Ô C9):</label>
+            <input type="text" id="input-c9" value="Phế đẩu mẩu">
         </div>
         <div class="form-group">
-            <label for="input-e9">Khách hàng:</label>
-            <input type="text" id="input-e9" value="HPDQ">
+            <label for="input-d9">Loại hàng (Ô D9):</label>
+            <input type="text" id="input-d9" value="HPDQ">
         </div>
         <div class="form-group">
-            <label for="input-f9">Người đại diện:</label>
+            <label for="input-e9">Khách hàng (Ô E9):</label>
+            <input type="text" id="input-e9" value="">
+        </div>
+        <div class="form-group">
+            <label for="input-f9">Người đại diện (Ô F9):</label>
             <input type="text" id="input-f9" value="Nguyễn Văn A">
         </div>
         <div class="form-group">
-            <label for="input-g9">Số CCCD:</label>
+            <label for="input-g9">Số CCCD (Ô G9):</label>
             <input type="text" id="input-g9" value="HPDQ000000">
         </div>
-        
         <div class="form-group">
-            <label for="input-h9">BSX:</label>
+            <label for="input-h9">BSX (Ô H9):</label>
             <input type="text" id="input-h9" value="DKVT000">
         </div>
         <div class="form-group">
-            <label for="input-i9">Dơn vị vận chuyển:</label>
+            <label for="input-i9">Đơn vị vận chuyển (Ô I9):</label>
             <input type="text" id="input-i9" value="BPVT">
         </div>
         <div class="form-group">
-            <label for="input-j9">Số lô:</label>
+            <label for="input-j9">Số lô (Ô J9):</label>
             <input type="text" id="input-j9" value="">
         </div>
         <div class="form-group">
-            <label for="input-k9">Khối lượng:</label>
+            <label for="input-k9">Khối lượng (Ô K9):</label>
             <input type="text" id="input-k9" value="50">
         </div>
         <div class="form-group">
-            <label for="input-l9">Mục đích qua cân:</label>
+            <label for="input-l9">Mục đích qua cân (Ô L9):</label>
             <input type="text" id="input-l9" value="Xác định khối lượng">
         </div>
         <div class="form-group">
-            <label for="input-m9">Ghi chú:</label>
+            <label for="input-m9">Ghi chú (Ô M9):</label>
             <input type="text" id="input-m9" value="NM.CTDai(XCT1) =>NCNC1=>PX.LT-HRC1">
         </div>
+
         <button id="btn-xlsx">Tải file XLSX</button>
         <button id="btn-pdf">Tải file PDF</button>
 
