@@ -14,9 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // !!! ĐÃ XÓA DÒNG "inputA5.readOnly = true;" TẠI ĐÂY !!!
-        // Giờ đại ca có thể tự do chỉnh sửa ô A5
-
+        // Vẫn cho phép chỉnh sửa
         const kipValue = selectKip.value;
         const nhaCanValue = selectNhaCan.value;
         const today = new Date();
@@ -25,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = today.getFullYear();
         const dateString = `Kíp ${kipValue} Ngày ${day} tháng ${month} năm ${year}_NC số: ${nhaCanValue}`;
         
-        // Vẫn tự động điền giá trị
         inputA5.value = dateString;
     }
 
@@ -40,11 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnXlsx = document.getElementById('btn-xlsx');
     const btnPdf = document.getElementById('btn-pdf');
     const statusEl = document.getElementById('status');
-    const btnCopy = document.getElementById('btn-copy'); // Nút copy mới
+    const btnCopy = document.getElementById('btn-copy'); 
 
     if(btnXlsx) btnXlsx.addEventListener('click', () => generateFile('xlsx'));
     if(btnPdf) btnPdf.addEventListener('click', () => generateFile('pdf'));
-    if(btnCopy) btnCopy.addEventListener('click', copyData); // Thêm sự kiện cho nút copy
+    if(btnCopy) btnCopy.addEventListener('click', copyData); 
 
     async function generateFile(format) {
         if (statusEl) {
@@ -52,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
             statusEl.style.color = 'blue';
         }
 
-        // 1. Lấy dữ liệu (ĐÃ SỬA THEO ID CỦA ĐẠI CA)
+        // 1. Lấy dữ liệu
         const data = {
-            a5: document.getElementById('input-a5').value, // Sẽ lấy giá trị A5 dù đã bị sửa
+            a5: document.getElementById('input-a5').value, 
             b9: document.getElementById('input-b9').value, // Nội dung
             c9: document.getElementById('input-c9').value, // Chứng từ
             d9: document.getElementById('input-d9').value, // Chủng loại
@@ -93,7 +90,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = `NhuCauCanHang_${Date.now()}.${format}`; 
+            
+            // === SỬA TÊN FILE THEO YÊU CẦU ===
+            const now = new Date();
+            // Hàm padStart(2, '0') để đảm bảo ngày tháng có 2 chữ số (vd: 05 thay vì 5)
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11 nên +1
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const ngayThangNam = `${day}_${month}_${year}`;
+            const thoiGian = `${hours}h${minutes}p${seconds}s`;
+            
+            // Lấy BSX từ data, nếu rỗng thì dùng chữ "NoBSX"
+            let bsx = data.h9 || 'NoBSX'; 
+            // Xóa ký tự đặc biệt để tên file hợp lệ
+            bsx = bsx.replace(/[^a-z0-9_-]/gi, '').trim(); 
+
+            a.download = `NhuCauCanHang_${ngayThangNam}_${bsx}_${thoiGian}.${format}`;
+            // === KẾT THÚC SỬA TÊN FILE ===
+
             document.body.appendChild(a);
             
             a.click(); 
@@ -116,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // --- HÀM MỚI ĐỂ COPY DỮ LIỆU (ĐÃ SỬA THEO ID CỦA ĐẠI CA) ---
+    // --- HÀM MỚI ĐỂ COPY DỮ LIỆU ---
     function copyData() {
         try {
             // 1. Lấy tất cả giá trị
@@ -126,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const truongKip = document.getElementById('input-truongkip').value;
             const cccd = document.getElementById('input-g9').value;
             const khachHang = document.getElementById('input-e9').value;
-            const noiDung = document.getElementById('input-b9').value;     // Sửa thành b9
-            const chungLoai = document.getElementById('input-d9').value;   // Sửa thành d9
+            const noiDung = document.getElementById('input-b9').value;
+            const chungLoai = document.getElementById('input-d9').value;
             const daiDien = document.getElementById('input-f9').value;
             const bsx = document.getElementById('input-h9').value;
             const donViVanChuyen = document.getElementById('input-i9').value;
