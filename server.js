@@ -42,7 +42,7 @@ async function fillExcel(data, outputPath) {
     worksheet.getCell('M9').value = data.m9; // [Ghi chú] (id m9 -> ô M9)
 
     // Gán trưởng kíp vào ô Người lập (K12)
-    worksheet.getCell('K12').value = data.truongKip;
+    worksheet.getCell('I15').value = data.truongKip;
 
     // Lưu file
     await workbook.xlsx.writeFile(outputPath);
@@ -136,3 +136,4 @@ app.listen(PORT, () => {
 Video này giải thích thêm về cách thay đổi hướng trang trong LibreOffice, điều mà chúng ta vừa làm bằng dòng lệnh.
 [Cách thay đổi khổ giấy dọc sang ngang trong LibreOffice](https://www.youtube.com/watch?v=abfSjPiIOgo)
 http://googleusercontent.com/youtube_content/32
+
