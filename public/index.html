@@ -8,7 +8,6 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f4f4; }
         .container { max-width: 640px; margin: auto; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 15px; }
-        /* Đảm bảo label không bị ngắt dòng */
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; white-space: nowrap; }
         .form-group input, .form-group select { 
             width: 100%; 
@@ -51,7 +50,7 @@
 <body>
 
     <div class="container">
-        <h2>Phiếu Nhập Liệu</h2> <!-- Rút gọn -->
+        <h2>Phiếu Nhập Liệu</h2> 
 
         <div class="form-row">
             <div class="form-group">
@@ -134,7 +133,7 @@
                 <input type="text" id="input-h9" value="DKVT000">
             </div>
             <div class="form-group">
-                <label for="input-i9">ĐV Vận chuyển:</label> <!-- Rút gọn -->
+                <label for="input-i9">ĐV Vận chuyển:</label>
                 <input type="text" id="input-i9" value="BPVT">
             </div>
         </div>
@@ -151,10 +150,10 @@
             </div>
         </div>
 
-        <!-- HÀNG 6 -->
+        <!-- HÀNG 6 (ĐÃ SỬA) -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-l9">Mục đích:</label> <!-- Rút gọn -->
+                <label for="input-l9">Mục đích:</label>
                 <input type="text" id="input-l9" value="Xác định khối lượng">
             </div>
             <div class="form-group">
@@ -163,7 +162,13 @@
             </div>
         </div>
 
-        <!-- HÀNG 7 -->
+        <!-- HÀNG 7 (THÊM XƯỞNG) -->
+        <div class="form-group">
+            <label for="input-xuong">Xưởng:</label>
+            <input type="text" id="input-xuong" value="XCT1">
+        </div>
+
+        <!-- HÀNG 8 (GHI CHÚ) -->
         <div class="form-group">
             <label for="input-m9">Ghi chú:</label>
             <input type="text" id="input-m9" value=""> 
