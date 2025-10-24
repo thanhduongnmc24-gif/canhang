@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>NHẬP LIỆU ĐĂNG KÝ XE CÂN HÀNG</title>
+    <title>Nhập Liệu Cân Hàng</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -16,7 +16,6 @@
             border-radius: 4px; 
             box-sizing: border-box;
         }
-        /* Đã xóa khối CSS cho input[readonly] */
         .form-row {
             display: flex;
             gap: 10px;
@@ -50,8 +49,8 @@
 <body>
 
     <div class="container">
-        <h2>NGUYỄN THANH DƯƠNG-HPDQ01016</h2>
-        <h2>NHẬP LIỆU ĐĂNG KÝ XE CÂN HÀNG</h2>
+        <h2>Phiếu Nhập Liệu Nhu Cầu Cân Hàng</h2>
+
         <div class="form-row">
             <div class="form-group">
                 <label for="select-kip">Chọn kíp:</label>
@@ -88,74 +87,89 @@
         </div>
         <hr>
         
-        <h3>Thông tin hàng</h3>
+        <h3>Thông tin hàng (Dòng 9)</h3>
 
+        <!-- HÀNG 1 -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-b9">Nội dung:</label>
+                <label for="input-b9">Nội dung (Ô B9):</label>
                 <input type="text" id="input-b9" value="Nhập hàng nội bộ (BP NM này xuất sang BP NM khác thuộc HPDQ)">
             </div>
             <div class="form-group">
-                <label for="input-c9">Chứng từ:</label>
+                <label for="input-c9">Chứng từ (Ô C9):</label>
                 <input type="text" id="input-c9" value="">
             </div>
         </div>
 
+        <!-- HÀNG 2 -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-d9">Chủng loại hàng:</label>
+                <label for="input-d9">Chủng loại hàng (Ô D9):</label>
                 <input type="text" id="input-d9" value="Phế đẩu mẩu">
             </div>
             <div class="form-group">
-                <label for="input-e9">Khách hàng:</label>
+                <label for="input-e9">Khách hàng (Ô E9):</label>
                 <input type="text" id="input-e9" value="HPDQ">
             </div>
         </div>
 
+        <!-- HÀNG 3 -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-f9">Người đại diện:</label>
+                <label for="input-f9">Người đại diện (Ô F9):</label>
                 <input type="text" id="input-f9" value="Nguyễn Văn A">
             </div>
             <div class="form-group">
-                <label for="input-g9">Số CCCD:</label>
+                <label for="input-g9">Số CCCD (Ô G9):</label>
                 <input type="text" id="input-g9" value="HPDQ000000">
             </div>
         </div>
 
+        <!-- HÀNG 4 -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-h9">BSX:</label>
+                <label for="input-h9">BSX (Ô H9):</label>
                 <input type="text" id="input-h9" value="DKVT000">
             </div>
             <div class="form-group">
-                <label for="input-i9">ĐVVC:</label>
+                <label for="input-i9">Đơn vị vận chuyển (Ô I9):</label>
                 <input type="text" id="input-i9" value="BPVT">
             </div>
         </div>
 
+        <!-- HÀNG 5 -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-j9">Số lô:</label>
+                <label for="input-j9">Số lô (Ô J9):</label>
                 <input type="text" id="input-j9" value="">
             </div>
             <div class="form-group">
-                <label for="input-k9">Khối lượng:</label>
+                <label for="input-k9">Khối lượng (Ô K9):</label>
                 <input type="text" id="input-k9" value="50">
             </div>
         </div>
 
+        <!-- HÀNG 6 (ĐÃ SỬA) -->
         <div class="form-row">
             <div class="form-group">
-                <label for="input-l9">Mục đích qua cân:</label>
+                <label for="input-l9">Mục đích qua cân (Ô L9):</label>
                 <input type="text" id="input-l9" value="Xác định khối lượng">
             </div>
-            
-        </div>
-        <div class="form-group">
-                <label for="input-m9">Ghi chú:</label>
-                <input type="text" id="input-m9" value="NM.CTDai(XCT1) =>NCNC1=>PX.LT-HRC1">
+            <!-- Ô NƠI NHẬN MỚI -->
+            <div class="form-group">
+                <label for="input-noinhan">Nơi nhận:</label>
+                <input type="text" id="input-noinhan" value="LT.HRC1">
             </div>
+        </div>
+
+        <!-- HÀNG 7 (Ô GHI CHÚ MỚI) -->
+        <div class="form-group">
+            <label for="input-m9">Ghi chú (Ô M9):</label>
+            <!-- Ô này sẽ được JS tự động điền -->
+            <input type="text" id="input-m9" value=""> 
+        </div>
+
+
         <div class="button-group">
             <button id="btn-xlsx">Tải file XLSX</button>
             <button id="btn-pdf">Tải file PDF</button>
@@ -168,3 +182,5 @@
     <script src="app.js"></script>
 </body>
 </html>
+
+
