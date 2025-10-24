@@ -1,186 +1,215 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhập Liệu Cân Hàng</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group select { 
-            width: 100%; 
-            padding: 8px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box;
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- BẮT ĐẦU CODE CẬP NHẬT Ô A5 ---
+    const selectKip = document.getElementById('select-kip');
+    const selectNhaCan = document.getElementById('select-nha-can');
+    const inputA5 = document.getElementById('input-a5');
+
+    function updateA5() {
+        if (!selectKip || !selectNhaCan || !inputA5) {
+            console.error("Không tìm thấy element kíp, nhà cân hoặc input A5.");
+            return;
         }
-        .form-row {
-            display: flex;
-            gap: 10px;
+        const kipValue = selectKip.value;
+        const nhaCanValue = selectNhaCan.value;
+        const today = new Date();
+        const day = today.getDate();
+        const month = today.getMonth() + 1; // Tháng bắt đầu từ 0
+        const year = today.getFullYear();
+        const dateString = `Kíp ${kipValue} Ngày ${day} tháng ${month} năm ${year}_NC số: ${nhaCanValue}`;
+        inputA5.value = dateString;
+    }
+    if (selectKip) selectKip.addEventListener('change', updateA5);
+    if (selectNhaCan) selectNhaCan.addEventListener('change', updateA5);
+    updateA5(); 
+    // --- KẾT THÚC CODE CẬP NHẬT Ô A5 ---
+
+
+    // --- BẮT ĐẦU CODE CẬP NHẬT Ô GHI CHÚ (M9) MỚI ---
+    const inputNoiNhan = document.getElementById('input-noinhan');
+    const inputGhiChu = document.getElementById('input-m9');
+
+    function updateGhiChu() {
+        if (!selectNhaCan || !inputNoiNhan || !inputGhiChu) {
+            console.error("Không tìm thấy element nhà cân, nơi nhận, hoặc ghi chú.");
+            return;
         }
-        .form-row .form-group {
-            flex: 1; 
-            min-width: 0; 
+        const nhaCanValue = selectNhaCan.value;
+        const noiNhanValue = inputNoiNhan.value.trim(); // Dùng trim() để xóa khoảng trắng
+
+        // Cấu trúc: NM.CTDai(XCT1) =>nhà cân=>nơi nhận
+        inputGhiChu.value = `NM.CTDai(XCT1) =>${nhaCanValue}=>${noiNhanValue}`;
+    }
+
+    // Gắn sự kiện:
+    // 1. Khi thay đổi Nhà Cân
+    if (selectNhaCan) selectNhaCan.addEventListener('change', updateGhiChu);
+    // 2. Khi gõ chữ vào ô Nơi Nhận (dùng 'input' để cập nhật real-time)
+    if (inputNoiNhan) inputNoiNhan.addEventListener('input', updateGhiChu);
+    
+    // Chạy 1 lần khi tải trang để điền giá trị mặc định
+    updateGhiChu(); 
+    // --- KẾT THÚC CODE CẬP NHẬT Ô GHI CHÚ ---
+
+
+    // --- CODE CHO CÁC NÚT BẤM (Không thay đổi nhiều) ---
+    const btnXlsx = document.getElementById('btn-xlsx');
+    const btnPdf = document.getElementById('btn-pdf');
+    const statusEl = document.getElementById('status');
+    const btnCopy = document.getElementById('btn-copy'); 
+
+    if(btnXlsx) btnXlsx.addEventListener('click', () => generateFile('xlsx'));
+    if(btnPdf) btnPdf.addEventListener('click', () => generateFile('pdf'));
+    if(btnCopy) btnCopy.addEventListener('click', copyData); 
+
+    async function generateFile(format) {
+        if (statusEl) {
+            statusEl.textContent = `Đang xử lý tạo file ${format.toUpperCase()}, vui lòng chờ...`;
+            statusEl.style.color = 'blue';
         }
-        .button-group {
-            margin-top: 20px;
+
+        // 1. Lấy dữ liệu (File app.js sẽ tự động lấy giá trị M9 đã được cập nhật)
+        const data = {
+            a5: document.getElementById('input-a5').value, 
+            b9: document.getElementById('input-b9').value, 
+            c9: document.getElementById('input-c9').value, 
+            d9: document.getElementById('input-d9').value, 
+            e9: document.getElementById('input-e9').value, 
+            f9: document.getElementById('input-f9').value, 
+            g9: document.getElementById('input-g9').value, 
+            h9: document.getElementById('input-h9').value, // BSX
+            i9: document.getElementById('input-i9').value, 
+            j9: document.getElementById('input-j9').value, 
+            k9: document.getElementById('input-k9').value, 
+            l9: document.getElementById('input-l9').value, 
+            m9: document.getElementById('input-m9').value, // Lấy giá trị Ghi chú đã được update
+            truongKip: document.getElementById('input-truongkip').value, 
+        };
+
+        try {
+            // 2. Gọi API đến backend
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data, format }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Lỗi máy chủ: ${errorText}`);
+            }
+
+            // 3. Nhận file về dưới dạng 'blob'
+            const blob = await response.blob();
+
+            // 4. Tạo link tải về (Logic tên file vẫn như cũ)
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const ngayThangNam = `${day}_${month}_${year}`;
+            const thoiGian = `${hours}h${minutes}p${seconds}s`;
+            
+            let bsx = data.h9 || 'NoBSX'; 
+            bsx = bsx.replace(/[^a-z0-9_-]/gi, '').trim(); 
+
+            a.download = `NhuCauCanHang_${ngayThangNam}_${bsx}_${thoiGian}.${format}`;
+
+            document.body.appendChild(a);
+            a.click(); 
+
+            // 5. Dọn dẹp
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            if (statusEl) {
+                statusEl.textContent = 'Hoàn thành! Đã tải file.';
+                statusEl.style.color = 'green';
+            }
+
+        } catch (error) {
+            console.error('Lỗi khi tạo file:', error);
+            if (statusEl) {
+                statusEl.textContent = `Lỗi: ${error.message}`;
+                statusEl.style.color = 'red';
+            }
         }
-        .button-group button { 
-            background-color: #007bff; 
-            color: white; 
-            padding: 10px 15px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            margin-right: 10px; 
-            margin-bottom: 10px; 
+    }
+    
+    // --- HÀM COPY DỮ LIỆU (Tự động lấy Ghi chú đã update) ---
+    function copyData() {
+        try {
+            // 1. Lấy tất cả giá trị
+            const nhaCanSelect = document.getElementById('select-nha-can');
+            const nhaCanText = nhaCanSelect.options[nhaCanSelect.selectedIndex].text; 
+            
+            const truongKip = document.getElementById('input-truongkip').value;
+            const cccd = document.getElementById('input-g9').value;
+            const khachHang = document.getElementById('input-e9').value;
+            const noiDung = document.getElementById('input-b9').value;
+            const chungLoai = document.getElementById('input-d9').value;
+            const daiDien = document.getElementById('input-f9').value;
+            const bsx = document.getElementById('input-h9').value;
+            const donViVanChuyen = document.getElementById('input-i9').value;
+            const ghiChu = document.getElementById('input-m9').value; // Tự động lấy giá trị mới
+
+            // 2. Tạo nội dung
+            const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} đăng kí thông tin cân hàng như sau:
+Nội dung cân: ${noiDung}
+Hàng hoá : ${chungLoai}
+Khách hàng: ${khachHang}
+Đại diện: ${daiDien}
+Biển số xe: ${bsx};
+Đơn vị vận chuyển :${donViVanChuyen}
+Ghi chú: ${ghiChu}
+Trân trọng!`;
+
+            // 3. Copy vào clipboard
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            let success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                console.error('Không thể copy:', err);
+            }
+            document.body.removeChild(textArea);
+
+            // 4. Báo trạng thái
+            if (statusEl) {
+                if (success) {
+                    statusEl.textContent = 'Đã copy nội dung vào clipboard!';
+                    statusEl.style.color = 'green';
+                } else {
+                    throw new Error('Không thể tự động copy.');
+                }
+            }
+
+        } catch (error) {
+            console.error('Lỗi khi copy:', error);
+            if (statusEl) {
+                statusEl.textContent = `Lỗi: ${error.message}`;
+                statusEl.style.color = 'red';
+            }
         }
-        button:hover { background-color: #0056b3; }
-        #btn-pdf { background-color: #dc3545; }
-        #btn-pdf:hover { background-color: #a71d2a; }
-        #btn-copy { background-color: #28a745; }
-        #btn-copy:hover { background-color: #218838; }
-        #status { margin-top: 20px; font-size: 16px; color: #333; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2>Phiếu Nhập Liệu Nhu Cầu Cân Hàng</h2>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="select-kip">Chọn kíp:</label>
-                <select id="select-kip">
-                    <option value="1A">Kíp 1A</option>
-                    <option value="2A">Kíp 2A</option>
-                    <option value="1B">Kíp 1B</option>
-                    <option value="2B">Kíp 2B</option>
-                    <option value="1C">Kíp 1C</option>
-                    <option value="2C">Kíp 2C</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="select-nha-can">Chọn nhà cân:</label>
-                <select id="select-nha-can">
-                    <option value="NC1">Nhà cân 1</option>
-                    <option value="NC2">Nhà cân 2</option>
-                    <option value="NC3">Nhà cân 3</option>
-                    <option value="NC4">Nhà cân 4</option>
-                    <option value="NC5">Nhà cân 5</option>
-                    <option value="NC6">Nhà cân 6</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="input-truongkip">Trưởng kíp:</label>
-            <input type="text" id="input-truongkip" value="Nguyễn Văn Thoát">
-        </div>
-
-        <div class="form-group">
-            <label for="input-a5">Thông tin kíp (Ô A5):</label>
-            <input type="text" id="input-a5" value="" > 
-        </div>
-        <hr>
-        
-        <h3>Thông tin hàng (Dòng 9)</h3>
-
-        <!-- HÀNG 1 -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="input-b9">Nội dung (Ô B9):</label>
-                <input type="text" id="input-b9" value="Nhập hàng nội bộ (BP NM này xuất sang BP NM khác thuộc HPDQ)">
-            </div>
-            <div class="form-group">
-                <label for="input-c9">Chứng từ (Ô C9):</label>
-                <input type="text" id="input-c9" value="">
-            </div>
-        </div>
-
-        <!-- HÀNG 2 -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="input-d9">Chủng loại hàng (Ô D9):</label>
-                <input type="text" id="input-d9" value="Phế đẩu mẩu">
-            </div>
-            <div class="form-group">
-                <label for="input-e9">Khách hàng (Ô E9):</label>
-                <input type="text" id="input-e9" value="HPDQ">
-            </div>
-        </div>
-
-        <!-- HÀNG 3 -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="input-f9">Người đại diện (Ô F9):</label>
-                <input type="text" id="input-f9" value="Nguyễn Văn A">
-            </div>
-            <div class="form-group">
-                <label for="input-g9">Số CCCD (Ô G9):</label>
-                <input type="text" id="input-g9" value="HPDQ000000">
-            </div>
-        </div>
-
-        <!-- HÀNG 4 -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="input-h9">BSX (Ô H9):</label>
-                <input type="text" id="input-h9" value="DKVT000">
-            </div>
-            <div class="form-group">
-                <label for="input-i9">Đơn vị vận chuyển (Ô I9):</label>
-                <input type="text" id="input-i9" value="BPVT">
-            </div>
-        </div>
-
-        <!-- HÀNG 5 -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="input-j9">Số lô (Ô J9):</label>
-                <input type="text" id="input-j9" value="">
-            </div>
-            <div class="form-group">
-                <label for="input-k9">Khối lượng (Ô K9):</label>
-                <input type="text" id="input-k9" value="50">
-            </div>
-        </div>
-
-        <!-- HÀNG 6 (ĐÃ SỬA) -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="input-l9">Mục đích qua cân (Ô L9):</label>
-                <input type="text" id="input-l9" value="Xác định khối lượng">
-            </div>
-            <!-- Ô NƠI NHẬN MỚI -->
-            <div class="form-group">
-                <label for="input-noinhan">Nơi nhận:</label>
-                <input type="text" id="input-noinhan" value="LT.HRC1">
-            </div>
-        </div>
-
-        <!-- HÀNG 7 (Ô GHI CHÚ MỚI) -->
-        <div class="form-group">
-            <label for="input-m9">Ghi chú (Ô M9):</label>
-            <!-- Ô này sẽ được JS tự động điền -->
-            <input type="text" id="input-m9" value=""> 
-        </div>
-
-
-        <div class="button-group">
-            <button id="btn-xlsx">Tải file XLSX</button>
-            <button id="btn-pdf">Tải file PDF</button>
-            <button id="btn-copy">Copy Nội Dung</button>
-        </div>
-
-        <div id="status"></div>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
+    }
+});
 
 
