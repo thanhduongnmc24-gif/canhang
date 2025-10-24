@@ -1,20 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- BẮT ĐẦU CODE CẬP NHẬT Ô A5 ---
-    
-    // 1. Lấy các element
     const selectKip = document.getElementById('select-kip');
     const selectNhaCan = document.getElementById('select-nha-can');
     const inputA5 = document.getElementById('input-a5');
 
-    // 2. Hàm để cập nhật ô A5
     function updateA5() {
         if (!selectKip || !selectNhaCan || !inputA5) {
             console.error("Không tìm thấy element kíp, nhà cân hoặc input A5.");
             return;
         }
-        
-        // Vẫn cho phép chỉnh sửa
         const kipValue = selectKip.value;
         const nhaCanValue = selectNhaCan.value;
         const today = new Date();
@@ -22,18 +17,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = today.getMonth() + 1; // Tháng bắt đầu từ 0
         const year = today.getFullYear();
         const dateString = `Kíp ${kipValue} Ngày ${day} tháng ${month} năm ${year}_NC số: ${nhaCanValue}`;
-        
         inputA5.value = dateString;
     }
-
     if (selectKip) selectKip.addEventListener('change', updateA5);
     if (selectNhaCan) selectNhaCan.addEventListener('change', updateA5);
-    updateA5(); // Chạy 1 lần khi tải trang
-
+    updateA5(); 
     // --- KẾT THÚC CODE CẬP NHẬT Ô A5 ---
 
 
-    // --- CODE CHO CÁC NÚT BẤM ---
+    // --- BẮT ĐẦU CODE CẬP NHẬT Ô GHI CHÚ (M9) MỚI ---
+    const inputNoiNhan = document.getElementById('input-noinhan');
+    const inputGhiChu = document.getElementById('input-m9');
+
+    function updateGhiChu() {
+        if (!selectNhaCan || !inputNoiNhan || !inputGhiChu) {
+            console.error("Không tìm thấy element nhà cân, nơi nhận, hoặc ghi chú.");
+            return;
+        }
+        const nhaCanValue = selectNhaCan.value;
+        const noiNhanValue = inputNoiNhan.value.trim(); // Dùng trim() để xóa khoảng trắng
+
+        // Cấu trúc: NM.CTDai(XCT1) =>nhà cân=>nơi nhận
+        inputGhiChu.value = `NM.CTDai(XCT1) =>${nhaCanValue}=>${noiNhanValue}`;
+    }
+
+    // Gắn sự kiện:
+    // 1. Khi thay đổi Nhà Cân
+    if (selectNhaCan) selectNhaCan.addEventListener('change', updateGhiChu);
+    // 2. Khi gõ chữ vào ô Nơi Nhận (dùng 'input' để cập nhật real-time)
+    if (inputNoiNhan) inputNoiNhan.addEventListener('input', updateGhiChu);
+    
+    // Chạy 1 lần khi tải trang để điền giá trị mặc định
+    updateGhiChu(); 
+    // --- KẾT THÚC CODE CẬP NHẬT Ô GHI CHÚ ---
+
+
+    // --- CODE CHO CÁC NÚT BẤM (Không thay đổi nhiều) ---
     const btnXlsx = document.getElementById('btn-xlsx');
     const btnPdf = document.getElementById('btn-pdf');
     const statusEl = document.getElementById('status');
@@ -49,21 +68,21 @@ document.addEventListener('DOMContentLoaded', () => {
             statusEl.style.color = 'blue';
         }
 
-        // 1. Lấy dữ liệu
+        // 1. Lấy dữ liệu (File app.js sẽ tự động lấy giá trị M9 đã được cập nhật)
         const data = {
             a5: document.getElementById('input-a5').value, 
-            b9: document.getElementById('input-b9').value, // Nội dung
-            c9: document.getElementById('input-c9').value, // Chứng từ
-            d9: document.getElementById('input-d9').value, // Chủng loại
-            e9: document.getElementById('input-e9').value, // Khách hàng
-            f9: document.getElementById('input-f9').value, // Người đại diện
-            g9: document.getElementById('input-g9').value, // CCCD
+            b9: document.getElementById('input-b9').value, 
+            c9: document.getElementById('input-c9').value, 
+            d9: document.getElementById('input-d9').value, 
+            e9: document.getElementById('input-e9').value, 
+            f9: document.getElementById('input-f9').value, 
+            g9: document.getElementById('input-g9').value, 
             h9: document.getElementById('input-h9').value, // BSX
-            i9: document.getElementById('input-i9').value, // ĐVVC
-            j9: document.getElementById('input-j9').value, // Số lô
-            k9: document.getElementById('input-k9').value, // Khối lượng
-            l9: document.getElementById('input-l9').value, // Mục đích
-            m9: document.getElementById('input-m9').value, // Ghi chú
+            i9: document.getElementById('input-i9').value, 
+            j9: document.getElementById('input-j9').value, 
+            k9: document.getElementById('input-k9').value, 
+            l9: document.getElementById('input-l9').value, 
+            m9: document.getElementById('input-m9').value, // Lấy giá trị Ghi chú đã được update
             truongKip: document.getElementById('input-truongkip').value, 
         };
 
@@ -85,17 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // 3. Nhận file về dưới dạng 'blob'
             const blob = await response.blob();
 
-            // 4. Tạo link tải về
+            // 4. Tạo link tải về (Logic tên file vẫn như cũ)
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
             
-            // === SỬA TÊN FILE THEO YÊU CẦU ===
             const now = new Date();
-            // Hàm padStart(2, '0') để đảm bảo ngày tháng có 2 chữ số (vd: 05 thay vì 5)
             const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11 nên +1
+            const month = String(now.getMonth() + 1).padStart(2, '0');
             const year = now.getFullYear();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -104,16 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const ngayThangNam = `${day}_${month}_${year}`;
             const thoiGian = `${hours}h${minutes}p${seconds}s`;
             
-            // Lấy BSX từ data, nếu rỗng thì dùng chữ "NoBSX"
             let bsx = data.h9 || 'NoBSX'; 
-            // Xóa ký tự đặc biệt để tên file hợp lệ
             bsx = bsx.replace(/[^a-z0-9_-]/gi, '').trim(); 
 
             a.download = `NhuCauCanHang_${ngayThangNam}_${bsx}_${thoiGian}.${format}`;
-            // === KẾT THÚC SỬA TÊN FILE ===
 
             document.body.appendChild(a);
-            
             a.click(); 
 
             // 5. Dọn dẹp
@@ -134,12 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // --- HÀM MỚI ĐỂ COPY DỮ LIỆU ---
+    // --- HÀM COPY DỮ LIỆU (Tự động lấy Ghi chú đã update) ---
     function copyData() {
         try {
             // 1. Lấy tất cả giá trị
             const nhaCanSelect = document.getElementById('select-nha-can');
-            const nhaCanText = nhaCanSelect.options[nhaCanSelect.selectedIndex].text; // Lấy "Nhà cân 1"
+            const nhaCanText = nhaCanSelect.options[nhaCanSelect.selectedIndex].text; 
             
             const truongKip = document.getElementById('input-truongkip').value;
             const cccd = document.getElementById('input-g9').value;
@@ -149,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const daiDien = document.getElementById('input-f9').value;
             const bsx = document.getElementById('input-h9').value;
             const donViVanChuyen = document.getElementById('input-i9').value;
-            const ghiChu = document.getElementById('input-m9').value;
+            const ghiChu = document.getElementById('input-m9').value; // Tự động lấy giá trị mới
 
             // 2. Tạo nội dung
             const textToCopy = `Gửi ACE ${nhaCanText}, ${truongKip} đăng kí thông tin cân hàng như sau:
@@ -198,3 +211,5 @@ Trân trọng!`;
         }
     }
 });
+
+
