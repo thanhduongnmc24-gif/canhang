@@ -8,17 +8,15 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f4f4; }
         .container { max-width: 640px; margin: auto; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        /* === CSS MỚI ĐỂ CĂN GIỮA VIDEO === */
         .video-container {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
         .video-container iframe {
-            border-radius: 8px; /* Bo góc cho đẹp */
-            max-width: 100%; /* Đảm bảo không tràn màn hình điện thoại */
+            border-radius: 8px; 
+            max-width: 100%; 
         }
-        /* === KẾT THÚC CSS MỚI === */
 
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; white-space: nowrap; }
@@ -65,18 +63,18 @@
     <div class="container">
         <h2>Phiếu Nhập Liệu</h2> 
 
-        <!-- === BẮT ĐẦU YOUTUBE SHORT === -->
+        <!-- === BẮT ĐẦU YOUTUBE SHORT (ĐÃ SỬA LỖI) === -->
         <div class="video-container">
-            <!-- 
-                Đại ca thay 'VIDEO_ID_CUA_DAI_CA' bằng ID của video.
-                - autoplay=1: Tự động phát
-                - mute=1: Tắt tiếng (BẮT BUỘC để autoplay hoạt động)
-                - loop=1 & playlist=...: Tự động lặp lại video
-            -->
             <iframe 
                 width="315"  <!-- Chiều rộng của Short -->
                 height="560" <!-- Chiều cao của Short -->
-                src="https://youtube.com/shorts/gsOyCkaenUQ?si=Bl-1SatWI8feFzW3" 
+                
+                <!-- 
+                  LỖI CỦA ĐẠI CA LÀ DÙNG: src="https://youtube.com/shorts/..."
+                  CODE ĐÚNG PHẢI DÙNG:   src="https://www.youtube.com/embed/..."
+                -->
+                src="https://www.youtube.com/embed/gsOyCkaenUQ?autoplay=1&mute=1&loop=1&playlist=gsOyCkaenUQ" 
+                
                 title="YouTube video player" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
