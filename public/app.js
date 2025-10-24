@@ -28,31 +28,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- BẮT ĐẦU CODE CẬP NHẬT Ô GHI CHÚ (M9) MỚI ---
     const inputNoiNhan = document.getElementById('input-noinhan');
     const inputGhiChu = document.getElementById('input-m9');
+    const inputXuong = document.getElementById('input-xuong'); // Lấy ô xưởng mới
 
     function updateGhiChu() {
-        if (!selectNhaCan || !inputNoiNhan || !inputGhiChu) {
-            console.error("Không tìm thấy element nhà cân, nơi nhận, hoặc ghi chú.");
+        if (!selectNhaCan || !inputNoiNhan || !inputGhiChu || !inputXuong) {
+            console.error("Không tìm thấy element nhà cân, nơi nhận, xưởng, hoặc ghi chú.");
             return;
         }
         const nhaCanValue = selectNhaCan.value;
-        const noiNhanValue = inputNoiNhan.value.trim(); // Dùng trim() để xóa khoảng trắng
+        const noiNhanValue = inputNoiNhan.value.trim();
+        const xuongValue = inputXuong.value.trim(); // Lấy giá trị xưởng
 
-        // Cấu trúc: NM.CTDai(XCT1) =>nhà cân=>nơi nhận
-        inputGhiChu.value = `NM.CTDai(XCT1) =>${nhaCanValue}=>${noiNhanValue}`;
+        // Cấu trúc: NM.CTDai(xưởng) =>nhà cân=>nơi nhận
+        inputGhiChu.value = `NM.CTDai(${xuongValue}) =>${nhaCanValue}=>${noiNhanValue}`;
     }
 
     // Gắn sự kiện:
     // 1. Khi thay đổi Nhà Cân
     if (selectNhaCan) selectNhaCan.addEventListener('change', updateGhiChu);
-    // 2. Khi gõ chữ vào ô Nơi Nhận (dùng 'input' để cập nhật real-time)
+    // 2. Khi gõ chữ vào ô Nơi Nhận
     if (inputNoiNhan) inputNoiNhan.addEventListener('input', updateGhiChu);
+    // 3. Khi gõ chữ vào ô Xưởng (MỚI)
+    if (inputXuong) inputXuong.addEventListener('input', updateGhiChu);
     
     // Chạy 1 lần khi tải trang để điền giá trị mặc định
     updateGhiChu(); 
     // --- KẾT THÚC CODE CẬP NHẬT Ô GHI CHÚ ---
 
 
-    // --- CODE CHO CÁC NÚT BẤM (Không thay đổi nhiều) ---
+    // --- CODE CHO CÁC NÚT BẤM (Không thay đổi) ---
     const btnXlsx = document.getElementById('btn-xlsx');
     const btnPdf = document.getElementById('btn-pdf');
     const statusEl = document.getElementById('status');
@@ -84,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             l9: document.getElementById('input-l9').value, 
             m9: document.getElementById('input-m9').value, // Lấy giá trị Ghi chú đã được update
             truongKip: document.getElementById('input-truongkip').value, 
+            // Lưu ý: data.xuong không cần gửi vì nó đã nằm trong data.m9
         };
 
         try {
