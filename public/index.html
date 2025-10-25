@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nhập Liệu Cân Hàng</title>
-     <h5>Nhập Liệu Cân Hàng</h5>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f4f4; }
         .container { max-width: 640px; margin: auto; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        /* === CSS MỚI CHO NÚT YOUTUBE === */
+        /* === CSS MỚI ĐỂ CĂN GIỮA TIÊU ĐỀ === */
+        .container h2 {
+            text-align: center;
+        }
+        /* === KẾT THÚC CSS MỚI === */
+
         .follow-container {
             display: flex;
             justify-content: center;
@@ -29,8 +33,7 @@
         .youtube-button:hover {
             background-color: #c40000; /* Màu đỏ đậm hơn khi hover */
         }
-        /* === KẾT THÚC CSS MỚI === */
-
+        
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; white-space: nowrap; }
         .form-group input, .form-group select { 
@@ -75,18 +78,12 @@
 
     <div class="container">
         <h2>Phiếu Nhập Liệu</h2> 
-
-        <!-- === BẮT ĐẦU NÚT FOLLOW (ĐÃ THAY THẾ VIDEO) === -->
+        <h5>Nguyễn thanh dương-HPDQ01016</h5>
         <div class="follow-container">
-            <!-- 
-                Đại ca thay 'LINK_KENH_YOUTUBE_CUA_DAI_CA' bằng link kênh của mình
-                Ví dụ: https://www.youtube.com/channel/UC...
-            -->
             <a href="https://youtube.com/@cuoivobung12?si=ztkXD_fu2S7T48-m" target="_blank" class="youtube-button">
                 &#9658; Follow Kênh YouTube
             </a>
         </div>
-        <!-- === KẾT THÚC NÚT FOLLOW === -->
 
         <div class="form-row">
             <div class="form-group">
@@ -126,7 +123,6 @@
         
         <h3>Thông tin hàng</h3>
 
-        <!-- HÀNG 1 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-b9">Nội dung:</label>
@@ -138,7 +134,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 2 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-d9">Chủng loại hàng:</label>
@@ -150,7 +145,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 3 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-f9">Người đại diện:</label>
@@ -162,7 +156,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 4 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-h9">BSX:</label>
@@ -174,7 +167,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 5 -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-j9">Số lô:</label>
@@ -186,7 +178,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 6 (Nơi nhận và Mục đích) -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-l9">Mục đích:</label>
@@ -198,7 +189,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 7 (NHÀ MÁY MỚI và Xưởng) -->
         <div class="form-row">
             <div class="form-group">
                 <label for="input-nhamay">Nhà máy:</label>
@@ -210,7 +200,6 @@
             </div>
         </div>
 
-        <!-- HÀNG 8 (GHI CHÚ) -->
         <div class="form-group">
             <label for="input-m9">Ghi chú:</label>
             <input type="text" id="input-m9" value=""> 
@@ -229,5 +218,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
-
