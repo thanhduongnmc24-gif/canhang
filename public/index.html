@@ -8,15 +8,27 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f4f4; }
         .container { max-width: 640px; margin: auto; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        .video-container {
+        /* === CSS MỚI CHO NÚT YOUTUBE === */
+        .follow-container {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
-        .video-container iframe {
-            border-radius: 8px; 
-            max-width: 100%; 
+        .youtube-button {
+            display: inline-block;
+            background-color: #FF0000; /* Màu đỏ YouTube */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none; /* Bỏ gạch chân */
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
+        .youtube-button:hover {
+            background-color: #c40000; /* Màu đỏ đậm hơn khi hover */
+        }
+        /* === KẾT THÚC CSS MỚI === */
 
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; white-space: nowrap; }
@@ -63,25 +75,17 @@
     <div class="container">
         <h2>Phiếu Nhập Liệu</h2> 
 
-        <!-- === BẮT ĐẦU YOUTUBE SHORT (ĐÃ SỬA LỖI) === -->
-        <div class="video-container">
-            <iframe 
-                width="315"  <!-- Chiều rộng của Short -->
-                height="560" <!-- Chiều cao của Short -->
-                
-                <!-- 
-                  LỖI CỦA ĐẠI CA LÀ DÙNG: src="https://youtube.com/shorts/..."
-                  CODE ĐÚNG PHẢI DÙNG:   src="https://www.youtube.com/embed/..."
-                -->
-                src="https://www.youtube.com/embed/gsOyCkaenUQ?autoplay=1&mute=1&loop=1&playlist=gsOyCkaenUQ" 
-                
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
+        <!-- === BẮT ĐẦU NÚT FOLLOW (ĐÃ THAY THẾ VIDEO) === -->
+        <div class="follow-container">
+            <!-- 
+                Đại ca thay 'LINK_KENH_YOUTUBE_CUA_DAI_CA' bằng link kênh của mình
+                Ví dụ: https://www.youtube.com/channel/UC...
+            -->
+            <a href="https://youtube.com/@cuoivobung12?si=ztkXD_fu2S7T48-m" target="_blank" class="youtube-button">
+                &#9658; Follow Kênh YouTube
+            </a>
         </div>
-        <!-- === KẾT THÚC YOUTUBE SHORT === -->
+        <!-- === KẾT THÚC NÚT FOLLOW === -->
 
         <div class="form-row">
             <div class="form-group">
